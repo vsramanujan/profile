@@ -95,7 +95,7 @@ export default function Notes({ initialNotes }) {
                       bgColor: color,
                     }),
                   }).then((res) => res.json());
-                  setNotes([...notes, createdNote]);
+                  setNotes([createdNote, ...notes]);
                 }}
                 style={{ backgroundColor: color }}
                 className={styles.selector}
@@ -204,7 +204,7 @@ function Note({ note }) {
         show: {
           x: 0,
           y: 0,
-          rotate: Math.random() * -15 + Math.random() * 15 + 1,
+          rotate: -20 + Math.random() * 40,
         },
       }}
     >
@@ -222,28 +222,31 @@ function Note({ note }) {
             dateStyle: "medium",
           })}
         </div>
-        <button>
+        <motion.button
+          onClick={() => {
+            if (editable) {
+              if (noteText !== note.note) {
+                fetch("/api/notes", {
+                  method: "POST",
+                  body: JSON.stringify({
+                    note: noteText,
+                    updateTime: new Date().toISOString(),
+                    id: note.id,
+                  }),
+                });
+              }
+            }
+            setEditable(!editable);
+          }}
+          whileHover={{ scale: 1.2 }}
+          whileTap={{ scale: 0.8, rotate: 250 }}
+        >
           {editable ? (
-            <CheckIcon
-              width="1.7rem"
-              onClick={() => {
-                if (noteText !== note.note) {
-                  fetch("/api/notes", {
-                    method: "POST",
-                    body: JSON.stringify({
-                      note: noteText,
-                      updateTime: new Date().toISOString(),
-                      id: note.id,
-                    }),
-                  });
-                }
-                setEditable(false);
-              }}
-            />
+            <CheckIcon width="1.7rem" />
           ) : (
-            <PencilIcon width="1.7rem" onClick={() => setEditable(true)} />
+            <PencilIcon width="1.7rem" />
           )}
-        </button>
+        </motion.button>
       </div>
     </motion.div>
   );

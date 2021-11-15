@@ -27,7 +27,7 @@ export default function Home() {
         </header>
 
         <main className={styles.main}>
-          <h1 className={styles.title}>Ramanujan.</h1>
+          <h1 className={styles.title}>Ramanujan Veeravalli</h1>
 
           <p className={styles.description}>
             Software Engineer{" "}
