@@ -164,11 +164,24 @@ export default function Notes({ initialNotes }) {
         <main className={styles.main}>
           <h1>Notes</h1>
 
-          <div className={styles.noteParent}>
+          <motion.div
+            className={styles.noteParent}
+            initial="hidden"
+            animate="show"
+            variants={{
+              hidden: { opacity: 0 },
+              show: {
+                opacity: 1,
+                transition: {
+                  staggerChildren: 0.05,
+                },
+              },
+            }}
+          >
             {notes.map((note) => (
               <Note key={note.id} note={note} />
             ))}
-          </div>
+          </motion.div>
         </main>
       </div>
     </div>
@@ -180,9 +193,20 @@ function Note({ note }) {
   const [editable, setEditable] = useState(false);
 
   return (
-    <div
+    <motion.div
       className={styles.note}
       style={{ backgroundColor: note.bgColor || "#ffcf7d" }}
+      drag
+      dragConstraints={{ top: 0, bottom: 0, left: 0, right: 0 }}
+      dragTransition={{ bounceStiffness: 600, bounceDamping: 20 }}
+      variants={{
+        hidden: { x: -100, rotate: -20, y: 100 },
+        show: {
+          x: 0,
+          y: 0,
+          rotate: Math.random() * -15 + Math.random() * 15 + 1,
+        },
+      }}
     >
       <textarea
         value={noteText}
@@ -221,6 +245,6 @@ function Note({ note }) {
           )}
         </button>
       </div>
-    </div>
+    </motion.div>
   );
 }
