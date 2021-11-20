@@ -6,7 +6,7 @@ import {
   PencilIcon,
   CheckIcon,
 } from "@heroicons/react/solid";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion, useViewportScroll } from "framer-motion";
 
 import { prismaClient as prisma } from "../db";
@@ -44,6 +44,11 @@ const colors = ["#ffcf7d", "#f0a177", "#b095f6", "#55cffa", "#e6ee96"];
 export default function Notes({ initialNotes }) {
   const [buttonState, setButtonState] = useState(BUTTON_STATES.IDLE);
   const [notes, setNotes] = useState(initialNotes);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const notesWithSearchPruned = searchQuery
+    ? notes.filter((note) => note.note.includes(searchQuery))
+    : notes;
 
   return (
     <div className={styles.container}>
@@ -158,7 +163,12 @@ export default function Notes({ initialNotes }) {
         <header className={styles.header}>
           <div className={styles.search}>
             <SearchIcon width="1.2rem" />
-            <input type="text" placeholder="Search" />
+            <input
+              type="text"
+              placeholder="Search"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.currentTarget.value)}
+            />
           </div>
         </header>
         <main className={styles.main}>
@@ -178,9 +188,17 @@ export default function Notes({ initialNotes }) {
               },
             }}
           >
-            {notes.map((note) => (
-              <Note key={note.id} note={note} />
-            ))}
+            {notesWithSearchPruned.length ? (
+              notesWithSearchPruned.map((note) => (
+                <Note key={note.id} note={note} />
+              ))
+            ) : (
+              <div className={styles.noteCardPlaceholder}>
+                {searchQuery
+                  ? "No notes matched the search query"
+                  : "Start adding notes by clicking on the + icon on the left"}
+              </div>
+            )}
           </motion.div>
         </main>
       </div>
@@ -200,11 +218,10 @@ function Note({ note }) {
       dragConstraints={{ top: 0, bottom: 0, left: 0, right: 0 }}
       dragTransition={{ bounceStiffness: 600, bounceDamping: 20 }}
       variants={{
-        hidden: { x: -100, rotate: -20, y: 100 },
+        hidden: { x: -100, y: 100 },
         show: {
           x: 0,
           y: 0,
-          rotate: -20 + Math.random() * 40,
         },
       }}
     >

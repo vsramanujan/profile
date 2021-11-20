@@ -169,3 +169,7 @@
   border: none;
   cursor: pointer;
 }
+
+.noteCardPlaceholder {
+  opacity: 0.4;
+}
