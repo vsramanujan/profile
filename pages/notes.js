@@ -215,6 +215,7 @@ function Note({ note }) {
       className={styles.note}
       style={{ backgroundColor: note.bgColor || "#ffcf7d" }}
       drag
+      whileHover={{ scale: 1.1 }}
       dragConstraints={{ top: 0, bottom: 0, left: 0, right: 0 }}
       dragTransition={{ bounceStiffness: 600, bounceDamping: 20 }}
       variants={{
