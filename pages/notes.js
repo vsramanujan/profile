@@ -6,8 +6,8 @@ import {
   PencilIcon,
   CheckIcon,
 } from "@heroicons/react/solid";
-import { useEffect, useState } from "react";
-import { motion, useViewportScroll } from "framer-motion";
+import { useState } from "react";
+import { motion } from "framer-motion";
 
 import { prismaClient as prisma } from "../db";
 
@@ -212,6 +212,7 @@ function Note({ note }) {
 
   return (
     <motion.div
+      exit={{ x: 200 }}
       className={styles.note}
       style={{ backgroundColor: note.bgColor || "#ffcf7d" }}
       drag
